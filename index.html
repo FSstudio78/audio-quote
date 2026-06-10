@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="zh-TW"><head>
+<html lang="zh-TW">
+<head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>活動音響設備報價單</title>
@@ -126,8 +127,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft JhengHei
       <div class="pin-title">🔐 業主模式</div>
       <div class="pin-sub">輸入密碼以編輯單價</div>
       <div class="pin-dots">
-        <div class="pin-dot filled" id="d0"></div><div class="pin-dot filled" id="d1"></div>
-        <div class="pin-dot filled" id="d2"></div><div class="pin-dot filled" id="d3"></div>
+        <div class="pin-dot" id="d0"></div><div class="pin-dot" id="d1"></div>
+        <div class="pin-dot" id="d2"></div><div class="pin-dot" id="d3"></div>
       </div>
       <div class="pin-grid">
         <button class="pin-key" onclick="pk(1)">1</button><button class="pin-key" onclick="pk(2)">2</button><button class="pin-key" onclick="pk(3)">3</button>
@@ -142,7 +143,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft JhengHei
   </div>
 
   <!-- Owner Banner -->
-  <div class="owner-banner show" id="owner-banner">
+  <div class="owner-banner" id="owner-banner">
     <div class="owner-banner-row">
       <span>🔓 業主模式：可編輯單價</span>
       <button onclick="lockOwner()" class="btn btn-danger" style="flex:0;padding:8px 14px;font-size:13px;">鎖定</button>
@@ -161,7 +162,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft JhengHei
         <div class="brand-label">活動音響租賃服務</div>
         <div class="brand-title" id="brand-title" onclick="titleTap()">設備報價單</div>
       </div>
-      <div class="meta"><div id="qdate">2026/6/10</div><div>Q-<span id="qnum">908</span></div></div>
+      <div class="meta"><div id="qdate"></div><div>Q-<span id="qnum"></span></div></div>
     </div>
     <div class="event-grid">
       <div class="field full"><label>客戶 / 公司名稱</label><input type="text" id="f-client" placeholder="輸入客戶名稱"></div>
@@ -211,178 +212,29 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft JhengHei
 <!-- ── 設備資料（業主模式儲存會更新這裡）── -->
 <script id="cats-data" type="application/json">
 [
-  {
-    "id": "spk",
-    "name": "擴音系統",
-    "bg": "bg-blue",
-    "ic": "ic-blue",
-    "emoji": "🔊",
-    "items": [
-      {
-        "id": "s1",
-        "name": "JBL EON615",
-        "spec": "主動式外場喇叭 15吋",
-        "unit": "顆",
-        "price": 2500,
-        "qty": 0,
-        "on": false
-      },
-      {
-        "id": "s2",
-        "name": "EV ZLX-15-G2",
-        "spec": "被動式外場喇叭 15吋",
-        "unit": "顆",
-        "price": 2500,
-        "qty": 0,
-        "on": false
-      },
-      {
-        "id": "s3",
-        "name": "Yamaha CBR12",
-        "spec": "舞台監聽喇叭 12吋",
-        "unit": "顆",
-        "price": 1200,
-        "qty": 0,
-        "on": false
-      },
-      {
-        "id": "s4",
-        "name": "Yamaha Stagepas",
-        "spec": "攜帶式PA系統（喇叭×2＋混音器＋架子）",
-        "unit": "套",
-        "price": 4500,
-        "qty": 0,
-        "on": false
-      },
-      {
-        "id": "s5",
-        "name": "MIPRO 709",
-        "spec": "攜帶式音箱",
-        "unit": "台",
-        "price": 3000,
-        "qty": 0,
-        "on": false
-      }
-    ]
-  },
-  {
-    "id": "mic",
-    "name": "麥克風系統",
-    "bg": "bg-green",
-    "ic": "ic-green",
-    "emoji": "🎤",
-    "items": [
-      {
-        "id": "m1",
-        "name": "MIPRO ACT-343",
-        "spec": "手握無線麥克風 雙頻道",
-        "unit": "組",
-        "price": 750,
-        "qty": 0,
-        "on": false
-      },
-      {
-        "id": "m2",
-        "name": "MIPRO ACT-747",
-        "spec": "手握無線麥克風 四頻道",
-        "unit": "組",
-        "price": 1100,
-        "qty": 0,
-        "on": false
-      },
-      {
-        "id": "m3",
-        "name": "Shure SM58",
-        "spec": "手握有線麥克風",
-        "unit": "支",
-        "price": 300,
-        "qty": 0,
-        "on": false
-      },
-      {
-        "id": "m4",
-        "name": "Shure SM57",
-        "spec": "收音有線麥克風",
-        "unit": "支",
-        "price": 300,
-        "qty": 0,
-        "on": false
-      }
-    ]
-  },
-  {
-    "id": "mix",
-    "name": "混音器 / 周邊",
-    "bg": "bg-amber",
-    "ic": "ic-amber",
-    "emoji": "🎚️",
-    "items": [
-      {
-        "id": "x1",
-        "name": "Yamaha DM3",
-        "spec": "數位混音器",
-        "unit": "台",
-        "price": 3500,
-        "qty": 0,
-        "on": false
-      },
-      {
-        "id": "x2",
-        "name": "DI Box",
-        "spec": "被動式",
-        "unit": "個",
-        "price": 0,
-        "qty": 0,
-        "on": false,
-        "free": true
-      }
-    ]
-  },
-  {
-    "id": "svc",
-    "name": "技術服務",
-    "bg": "bg-red",
-    "ic": "ic-red",
-    "emoji": "🎧",
-    "items": [
-      {
-        "id": "v1",
-        "name": "音控師（半天）",
-        "spec": "4 小時以內",
-        "unit": "場",
-        "price": 2500,
-        "qty": 0,
-        "on": false
-      },
-      {
-        "id": "v2",
-        "name": "音控師（全天）",
-        "spec": "8 小時以內",
-        "unit": "場",
-        "price": 4000,
-        "qty": 0,
-        "on": false
-      },
-      {
-        "id": "v3",
-        "name": "架設與收場",
-        "spec": "含搬運人力",
-        "unit": "次",
-        "price": 1500,
-        "qty": 0,
-        "on": false
-      },
-      {
-        "id": "v4",
-        "name": "場勘費",
-        "spec": "北部地區",
-        "unit": "次",
-        "price": 500,
-        "qty": 0,
-        "on": false
-      }
-    ]
-  }
+  {"id":"spk","name":"擴音系統","bg":"bg-blue","ic":"ic-blue","emoji":"🔊","items":[
+    {"id":"s1","name":"JBL EON615","spec":"主動式外場喇叭 15吋","unit":"顆","price":3000,"qty":0,"on":false},
+    {"id":"s2","name":"EV ZLX-15-G2","spec":"被動式外場喇叭 15吋","unit":"顆","price":2500,"qty":0,"on":false},
+    {"id":"s3","name":"Yamaha CBR12","spec":"舞台監聽喇叭 12吋","unit":"顆","price":1200,"qty":0,"on":false},
+    {"id":"s4","name":"Yamaha Stagepas","spec":"攜帶式PA系統（喇叭×2＋混音器＋架子）","unit":"套","price":3500,"qty":0,"on":false},
+    {"id":"s5","name":"MIPRO 709","spec":"攜帶式音箱","unit":"台","price":1500,"qty":0,"on":false}
+  ]},
+  {"id":"mic","name":"麥克風系統","bg":"bg-green","ic":"ic-green","emoji":"🎤","items":[
+    {"id":"m1","name":"MIPRO ACT-343","spec":"手握無線麥克風 雙頻道","unit":"組","price":1200,"qty":0,"on":false},
+    {"id":"m2","name":"MIPRO ACT-747","spec":"手握無線麥克風 四頻道","unit":"組","price":2000,"qty":0,"on":false},
+    {"id":"m3","name":"Shure SM58","spec":"手握有線麥克風","unit":"支","price":400,"qty":0,"on":false},
+    {"id":"m4","name":"Shure SM57","spec":"收音有線麥克風","unit":"支","price":400,"qty":0,"on":false}
+  ]},
+  {"id":"mix","name":"混音器 / 周邊","bg":"bg-amber","ic":"ic-amber","emoji":"🎚️","items":[
+    {"id":"x1","name":"Yamaha DM3","spec":"數位混音器","unit":"台","price":3500,"qty":0,"on":false},
+    {"id":"x2","name":"DI Box","spec":"被動式","unit":"個","price":0,"qty":0,"on":false,"free":true}
+  ]},
+  {"id":"svc","name":"技術服務","bg":"bg-red","ic":"ic-red","emoji":"🎧","items":[
+    {"id":"v1","name":"音控師（半天）","spec":"4 小時以內","unit":"場","price":3000,"qty":0,"on":false},
+    {"id":"v2","name":"音控師（全天）","spec":"8 小時以內","unit":"場","price":5000,"qty":0,"on":false},
+    {"id":"v3","name":"架設與收場","spec":"含搬運人力","unit":"次","price":1500,"qty":0,"on":false},
+    {"id":"v4","name":"場勘費","spec":"北部地區","unit":"次","price":500,"qty":0,"on":false}
+  ]}
 ]
 </script>
 
@@ -424,23 +276,31 @@ function exportHTML(){
     }))
   }));
 
+  // ── 匯出前：把業主模式UI全部藏起來 ──
+  const bannerEl = document.getElementById('owner-banner');
+  const pinEl    = document.getElementById('pin-bd');
+  const pvEl     = document.getElementById('pv-bd');
+  bannerEl.classList.remove('show');
+  pinEl.classList.remove('show');
+  pvEl.classList.remove('show');
+
   // 替換 JSON 資料區塊
   const catsEl = document.getElementById('cats-data');
   const origJson = catsEl.textContent;
-  const newJson = '\n' + JSON.stringify(clean, null, 2) + '\n';
-  catsEl.textContent = newJson;
+  catsEl.textContent = '\n' + JSON.stringify(clean, null, 2) + '\n';
 
-  // 清空動態產生的 HTML（不需要帶到新檔案）
+  // 清空動態產生的 HTML
   const eqEl = document.getElementById('eq-list');
   const origEq = eqEl.innerHTML;
   eqEl.innerHTML = '';
 
-  // 取得整份 HTML
+  // 取得整份 HTML（此時業主UI已隱藏）
   const html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
 
-  // 還原
+  // ── 還原所有狀態 ──
   catsEl.textContent = origJson;
   eqEl.innerHTML = origEq;
+  bannerEl.classList.add('show'); // 還原業主banner（目前仍在業主模式）
 
   // 下載
   const blob = new Blob([html], {type:'text/html;charset=utf-8'});
@@ -588,6 +448,5 @@ document.getElementById('qdate').textContent=new Date().toLocaleDateString('zh-T
 document.getElementById('qnum').textContent=String(Math.floor(Math.random()*900)+100);
 render();
 </script>
-
-
-</body></html>
+</body>
+</html>
