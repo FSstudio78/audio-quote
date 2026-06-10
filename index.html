@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="zh-TW"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>活動音響設備報價單</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft JhengHei",sans-serif;background:#f2f2f7;color:#1a1a1a;font-size:15px;}
+.page{max-width:860px;margin:0 auto;padding:20px 16px 40px;}
+.card{background:#fff;border-radius:16px;padding:20px;margin-bottom:14px;box-shadow:0 1px 4px rgba(0,0,0,.08);}
+.header-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;}
+.brand-label{font-size:12px;color:#888;margin-bottom:3px;}
+.brand-title{font-size:22px;font-weight:700;color:#111;cursor:default;user-select:none;}
+.meta{text-align:right;font-size:12px;color:#888;line-height:1.8;}
+.event-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.field label{display:block;font-size:11px;color:#888;margin-bottom:4px;}
+.field input{width:100%;padding:10px 12px;border:1.5px solid #e5e5e5;border-radius:10px;font-size:14px;color:#1a1a1a;background:#fafafa;outline:none;transition:border-color .15s;font-family:inherit;}
+.field input:focus{border-color:#4a90d9;background:#fff;}
+.field.full{grid-column:1/-1;}
+.category{margin-bottom:6px;}
+.cat-header{display:flex;align-items:center;gap:8px;padding:12px 16px;border-radius:12px;margin-bottom:2px;cursor:pointer;user-select:none;}
+.cat-header .cat-name{font-size:14px;font-weight:600;flex:1;}
+.cat-toggle{font-size:12px;color:#aaa;transition:transform .2s;}
+.cat-header.open .cat-toggle{transform:rotate(180deg);}
+.cat-body{display:none;padding:0 4px 8px;}
+.cat-body.open{display:block;}
+.item-card{background:#fff;border-radius:12px;padding:14px;margin-bottom:8px;box-shadow:0 1px 3px rgba(0,0,0,.06);transition:opacity .15s;}
+.item-card.off{opacity:.38;}
+.item-top{display:flex;align-items:flex-start;gap:10px;}
+.item-check{width:20px;height:20px;cursor:pointer;accent-color:#4a90d9;margin-top:2px;flex-shrink:0;}
+.item-name{font-size:14px;font-weight:600;margin-bottom:2px;}
+.item-spec{font-size:12px;color:#888;}
+.item-bottom{display:flex;align-items:center;justify-content:space-between;margin-top:12px;padding-top:10px;border-top:1px solid #f0f0f0;}
+.qty{display:flex;align-items:center;gap:8px;}
+.qty button{width:32px;height:32px;border-radius:50%;border:1.5px solid #e0e0e0;background:#f8f8f8;cursor:pointer;font-size:18px;color:#333;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent;}
+.qty button:active:not(:disabled){background:#e0e0e0;}
+.qty button:disabled{opacity:.3;cursor:default;}
+.qty span{font-size:16px;font-weight:700;min-width:24px;text-align:center;}
+.price-info{text-align:right;}
+.unit-price{font-size:12px;color:#aaa;margin-bottom:2px;}
+.subtotal{font-size:15px;font-weight:700;color:#1a1a1a;}
+.subtotal.empty{color:#ccc;font-weight:400;}
+.price-edit input{width:80px;padding:6px 8px;border:1.5px solid #f59e0b;border-radius:8px;font-size:13px;text-align:right;font-family:inherit;background:#fffbe6;}
+.free-badge{display:inline-block;font-size:12px;padding:3px 10px;border-radius:6px;background:#e8f7f0;color:#2e9b6a;font-weight:600;}
+.accessories{background:#f8f8f8;border-radius:12px;padding:12px 14px;font-size:13px;color:#777;margin-bottom:14px;}
+.total-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+.total-right{text-align:right;}
+.total-label{font-size:12px;color:#888;margin-bottom:3px;}
+.total-amount{font-size:28px;font-weight:800;color:#111;}
+.notes-label{font-size:11px;color:#888;margin-bottom:5px;}
+.notes-input{width:100%;padding:10px 12px;border:1.5px solid #e5e5e5;border-radius:10px;font-size:14px;font-family:inherit;outline:none;background:#fafafa;}
+.notes-input:focus{border-color:#4a90d9;background:#fff;}
+.btn-group{display:flex;gap:10px;margin-top:14px;}
+.btn{flex:1;padding:13px;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;border:none;font-family:inherit;-webkit-tap-highlight-color:transparent;}
+.btn-primary{background:#2563eb;color:#fff;}
+.btn-secondary{background:#f0f0f0;color:#555;}
+.btn-danger{background:#fee2e2;color:#dc2626;}
+.btn-export{background:#ecfdf5;color:#059669;border:1.5px solid #6ee7b7;}
+
+/* Owner banner */
+.owner-banner{display:none;background:#fffbe6;border:1.5px solid #f59e0b;border-radius:12px;padding:12px 14px;margin-bottom:14px;font-size:13px;color:#92400e;}
+.owner-banner.show{display:block;}
+.owner-banner-row{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;}
+.owner-btns{display:flex;gap:8px;margin-top:10px;}
+
+/* Faux modal backdrops */
+.backdrop{display:none;background:rgba(0,0,0,.45);border-radius:16px;padding:32px 16px;margin-bottom:14px;align-items:center;justify-content:center;}
+.backdrop.show{display:flex;}
+
+/* PIN box */
+.pin-box{background:#fff;border-radius:16px;padding:28px 24px;width:100%;max-width:320px;text-align:center;}
+.pin-title{font-size:16px;font-weight:700;margin-bottom:6px;}
+.pin-sub{font-size:13px;color:#888;margin-bottom:20px;}
+.pin-dots{display:flex;justify-content:center;gap:12px;margin-bottom:20px;}
+.pin-dot{width:14px;height:14px;border-radius:50%;background:#e0e0e0;transition:background .15s;}
+.pin-dot.filled{background:#2563eb;}
+.pin-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:240px;margin:0 auto;}
+.pin-key{padding:14px;border-radius:12px;border:1.5px solid #e0e0e0;background:#fafafa;font-size:18px;font-weight:600;cursor:pointer;-webkit-tap-highlight-color:transparent;font-family:inherit;}
+.pin-key:active{background:#e0e0e0;}
+.pin-err{font-size:13px;color:#dc2626;margin-top:10px;min-height:18px;}
+
+/* Preview box */
+.preview-sheet{background:#fff;border-radius:20px 20px 0 0;width:100%;max-height:80vh;overflow-y:auto;padding:24px 20px 32px;}
+.preview-drag{width:40px;height:4px;background:#e0e0e0;border-radius:2px;margin:0 auto 20px;}
+.p-meta{display:grid;grid-template-columns:auto 1fr;gap:3px 12px;font-size:13px;margin-bottom:16px;padding:12px;background:#f8f8f8;border-radius:10px;}
+.p-meta span:nth-child(odd){color:#888;font-size:12px;}
+.p-item{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #f0f0f0;font-size:14px;}
+.p-name{font-weight:600;margin-bottom:1px;}
+.p-spec{font-size:12px;color:#888;}
+.p-qty{font-size:12px;color:#888;margin-bottom:1px;}
+.p-sub{font-weight:700;}
+.p-total{text-align:right;font-size:20px;font-weight:800;padding:14px 0 4px;}
+.p-notes{font-size:13px;color:#555;padding:10px 12px;background:#f8f8f8;border-radius:8px;margin:10px 0;}
+.p-footer{font-size:11px;color:#bbb;margin-top:14px;line-height:1.6;}
+.preview-btns{display:flex;gap:10px;margin-top:16px;}
+
+/* Toast */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1a1a1a;color:#fff;padding:10px 20px;border-radius:10px;font-size:13px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:999;white-space:nowrap;}
+.toast.show{opacity:1;}
+
+.bg-blue{background:#eff6ff;}.ic-blue{color:#3b82f6;}
+.bg-green{background:#f0fdf4;}.ic-green{color:#22c55e;}
+.bg-amber{background:#fffbeb;}.ic-amber{color:#f59e0b;}
+.bg-red{background:#fff1f2;}.ic-red{color:#ef4444;}
+
+@media(min-width:600px){
+  .event-grid{grid-template-columns:1fr 1fr 1fr;}
+  .field.full{grid-column:auto;}
+  .preview-sheet{border-radius:20px;max-height:85vh;}
+  .backdrop{align-items:center;}
+}
+@media print{
+  body{background:#fff;}
+  .page{padding:0;}
+  .card{box-shadow:none;border:1px solid #e0e0e0;}
+  .btn-group,.owner-banner,.backdrop,.toast{display:none!important;}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- PIN Backdrop -->
+  <div class="backdrop" id="pin-bd">
+    <div class="pin-box">
+      <div class="pin-title">🔐 業主模式</div>
+      <div class="pin-sub">輸入密碼以編輯單價</div>
+      <div class="pin-dots">
+        <div class="pin-dot filled" id="d0"></div><div class="pin-dot filled" id="d1"></div>
+        <div class="pin-dot filled" id="d2"></div><div class="pin-dot filled" id="d3"></div>
+      </div>
+      <div class="pin-grid">
+        <button class="pin-key" onclick="pk(1)">1</button><button class="pin-key" onclick="pk(2)">2</button><button class="pin-key" onclick="pk(3)">3</button>
+        <button class="pin-key" onclick="pk(4)">4</button><button class="pin-key" onclick="pk(5)">5</button><button class="pin-key" onclick="pk(6)">6</button>
+        <button class="pin-key" onclick="pk(7)">7</button><button class="pin-key" onclick="pk(8)">8</button><button class="pin-key" onclick="pk(9)">9</button>
+        <button class="pin-key" onclick="pinClear()" style="font-size:13px;">清除</button>
+        <button class="pin-key" onclick="pk(0)">0</button>
+        <button class="pin-key" onclick="pinCancel()" style="font-size:13px;">取消</button>
+      </div>
+      <div class="pin-err" id="pin-err"></div>
+    </div>
+  </div>
+
+  <!-- Owner Banner -->
+  <div class="owner-banner" id="owner-banner">
+    <div class="owner-banner-row">
+      <span>🔓 業主模式：可編輯單價</span>
+      <button onclick="lockOwner()" class="btn btn-danger" style="flex:0;padding:8px 14px;font-size:13px;">鎖定</button>
+    </div>
+    <div class="owner-btns">
+      <button onclick="exportHTML()" class="btn btn-export" style="font-size:13px;padding:10px;">
+        💾 儲存新版本（下載更新後的檔案）
+      </button>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <div class="card">
+    <div class="header-top">
+      <div>
+        <div class="brand-label">活動音響租賃服務</div>
+        <div class="brand-title" id="brand-title" onclick="titleTap()">設備報價單</div>
+      </div>
+      <div class="meta"><div id="qdate">2026/6/10</div><div>Q-<span id="qnum">110</span></div></div>
+    </div>
+    <div class="event-grid">
+      <div class="field full"><label>客戶 / 公司名稱</label><input type="text" id="f-client" placeholder="輸入客戶名稱"></div>
+      <div class="field"><label>活動日期</label><input type="text" id="f-date" placeholder="2025/08/15"></div>
+      <div class="field"><label>活動地點</label><input type="text" id="f-venue" placeholder="台北國際會議中心"></div>
+    </div>
+  </div>
+
+  <!-- Equipment List -->
+  <div id="eq-list"></div>
+
+  <div class="accessories">🎁 隨附免費配件：麥克風架・吉他架・譜架（不列入計費）</div>
+
+  <!-- Total -->
+  <div class="card">
+    <div class="total-row">
+      <div style="font-size:13px;color:#888;">已選 <strong id="sel-count">0</strong> 項</div>
+      <div class="total-right">
+        <div class="total-label">合計（未含稅）</div>
+        <div class="total-amount" id="grand-total">NT$ 0</div>
+      </div>
+    </div>
+    <div><div class="notes-label">備註</div><input type="text" class="notes-input" id="f-notes" placeholder="例：含搬運、需場勘、可議價"></div>
+    <div class="btn-group">
+      <button class="btn btn-primary" onclick="showPreview()">📄 預覽報價單</button>
+      <button class="btn btn-secondary" onclick="resetAll()">↺ 重設</button>
+    </div>
+  </div>
+
+  <!-- Preview Backdrop -->
+  <div class="backdrop" id="pv-bd" onclick="closePv(event)" style="align-items:flex-end;">
+    <div class="preview-sheet">
+      <div class="preview-drag"></div>
+      <div id="pv-content"></div>
+      <div class="preview-btns">
+        <button class="btn btn-secondary" style="flex:1" onclick="closePv()">關閉</button>
+        <button class="btn btn-primary" style="flex:2" onclick="window.print()">🖨️ 列印 / 存 PDF</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- ── 設備資料（業主模式儲存會更新這裡）── -->
+<script id="cats-data" type="application/json">
+[
+  {
+    "id": "spk",
+    "name": "擴音系統",
+    "bg": "bg-blue",
+    "ic": "ic-blue",
+    "emoji": "🔊",
+    "items": [
+      {
+        "id": "s1",
+        "name": "JBL EON615",
+        "spec": "主動式外場喇叭 15吋",
+        "unit": "顆",
+        "price": 2500,
+        "qty": 0,
+        "on": false
+      },
+      {
+        "id": "s2",
+        "name": "EV ZLX-15-G2",
+        "spec": "被動式外場喇叭 15吋",
+        "unit": "顆",
+        "price": 2500,
+        "qty": 0,
+        "on": false
+      },
+      {
+        "id": "s3",
+        "name": "Yamaha CBR12",
+        "spec": "舞台監聽喇叭 12吋",
+        "unit": "顆",
+        "price": 1200,
+        "qty": 0,
+        "on": false
+      },
+      {
+        "id": "s4",
+        "name": "Yamaha Stagepas",
+        "spec": "攜帶式PA系統（喇叭×2＋混音器＋架子）",
+        "unit": "套",
+        "price": 4500,
+        "qty": 0,
+        "on": false
+      },
+      {
+        "id": "s5",
+        "name": "MIPRO 709",
+        "spec": "攜帶式音箱",
+        "unit": "台",
+        "price": 3000,
+        "qty": 0,
+        "on": false
+      }
+    ]
+  },
+  {
+    "id": "mic",
+    "name": "麥克風系統",
+    "bg": "bg-green",
+    "ic": "ic-green",
+    "emoji": "🎤",
+    "items": [
+      {
+        "id": "m1",
+        "name": "MIPRO ACT-343",
+        "spec": "手握無線麥克風 雙頻道",
+        "unit": "組",
+        "price": 750,
+        "qty": 0,
+        "on": false
+      },
+      {
+        "id": "m2",
+        "name": "MIPRO ACT-747",
+        "spec": "手握無線麥克風 四頻道",
+        "unit": "組",
+        "price": 1100,
+        "qty": 0,
+        "on": false
+      },
+      {
+        "id": "m3",
+        "name": "Shure SM58",
+        "spec": "手握有線麥克風",
+        "unit": "支",
+        "price": 300,
+        "qty": 0,
+        "on": false
+      },
+      {
+        "id": "m4",
+        "name": "Shure SM57",
+        "spec": "收音有線麥克風",
+        "unit": "支",
+        "price": 300,
+        "qty": 0,
+        "on": false
+      }
+    ]
+  },
+  {
+    "id": "mix",
+    "name": "混音器 / 周邊",
+    "bg": "bg-amber",
+    "ic": "ic-amber",
+    "emoji": "🎚️",
+    "items": [
+      {
+        "id": "x1",
+        "name": "Yamaha DM3",
+        "spec": "數位混音器",
+        "unit": "台",
+        "price": 3500,
+        "qty": 0,
+        "on": false
+      },
+      {
+        "id": "x2",
+        "name": "DI Box",
+        "spec": "被動式",
+        "unit": "個",
+        "price": 0,
+        "qty": 0,
+        "on": false,
+        "free": true
+      }
+    ]
+  },
+  {
+    "id": "svc",
+    "name": "技術服務",
+    "bg": "bg-red",
+    "ic": "ic-red",
+    "emoji": "🎧",
+    "items": [
+      {
+        "id": "v1",
+        "name": "音控師（半天）",
+        "spec": "4 小時以內",
+        "unit": "場",
+        "price": 2500,
+        "qty": 0,
+        "on": false
+      },
+      {
+        "id": "v2",
+        "name": "音控師（全天）",
+        "spec": "8 小時以內",
+        "unit": "場",
+        "price": 4000,
+        "qty": 0,
+        "on": false
+      },
+      {
+        "id": "v3",
+        "name": "架設與收場",
+        "spec": "含搬運人力",
+        "unit": "次",
+        "price": 1500,
+        "qty": 0,
+        "on": false
+      },
+      {
+        "id": "v4",
+        "name": "場勘費",
+        "spec": "北部地區",
+        "unit": "次",
+        "price": 500,
+        "qty": 0,
+        "on": false
+      }
+    ]
+  }
+]
+</script>
+
+<script>
+// ★ 修改這裡設定你的密碼（預設：1234）
+const OWNER_PIN = "1234";
+
+// 讀取設備資料
+const CATS = JSON.parse(document.getElementById('cats-data').textContent);
+const IDX = {};
+CATS.forEach(c => c.items.forEach(i => { IDX[i.id] = i; }));
+const openCats = {spk:true, mic:true, mix:true, svc:true};
+let editMode = false;
+let pinBuf = "";
+let tapCount = 0, tapTimer = null;
+
+// ── 自動儲存單價到裝置 ──
+function savePrices(){
+  try {
+    const p = {};
+    Object.values(IDX).forEach(i => { p[i.id] = i.price; });
+    localStorage.setItem('aq_prices', JSON.stringify(p));
+  } catch(e){}
+}
+function loadPrices(){
+  try {
+    const saved = JSON.parse(localStorage.getItem('aq_prices') || 'null');
+    if(saved) Object.entries(saved).forEach(([id,price]) => { if(IDX[id]) IDX[id].price = price; });
+  } catch(e){}
+}
+
+// ── 匯出更新版 HTML ──
+function exportHTML(){
+  // 準備乾淨的 CATS（含新單價、清除選取狀態）
+  const clean = CATS.map(cat => ({
+    ...cat,
+    items: cat.items.map(({id,name,spec,unit,price,free}) => ({
+      id, name, spec, unit, price, qty:0, on:false, ...(free?{free:true}:{})
+    }))
+  }));
+
+  // ── 匯出前：把業主模式UI全部藏起來 ──
+  const bannerEl = document.getElementById('owner-banner');
+  const pinEl    = document.getElementById('pin-bd');
+  const pvEl     = document.getElementById('pv-bd');
+  bannerEl.classList.remove('show');
+  pinEl.classList.remove('show');
+  pvEl.classList.remove('show');
+
+  // 替換 JSON 資料區塊
+  const catsEl = document.getElementById('cats-data');
+  const origJson = catsEl.textContent;
+  catsEl.textContent = '\n' + JSON.stringify(clean, null, 2) + '\n';
+
+  // 清空動態產生的 HTML
+  const eqEl = document.getElementById('eq-list');
+  const origEq = eqEl.innerHTML;
+  eqEl.innerHTML = '';
+
+  // 取得整份 HTML（此時業主UI已隱藏）
+  const html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+
+  // ── 還原所有狀態 ──
+  catsEl.textContent = origJson;
+  eqEl.innerHTML = origEq;
+  bannerEl.classList.add('show'); // 還原業主banner（目前仍在業主模式）
+
+  // 下載
+  const blob = new Blob([html], {type:'text/html;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = '音響設備報價單.html';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 500);
+
+  showToast('✅ 已下載更新版！用新檔案取代舊檔案即可');
+}
+
+// ── PIN ──
+function titleTap(){
+  tapCount++;
+  clearTimeout(tapTimer);
+  if(tapCount >= 5){ tapCount=0; showPin(); return; }
+  tapTimer = setTimeout(()=>{ tapCount=0; }, 800);
+}
+function showPin(){
+  pinBuf=''; updDots();
+  document.getElementById('pin-err').textContent='';
+  document.getElementById('pin-bd').classList.add('show');
+}
+function pk(n){
+  if(pinBuf.length >= 4) return;
+  pinBuf += n; updDots();
+  if(pinBuf.length === 4){
+    setTimeout(()=>{
+      if(pinBuf === OWNER_PIN){
+        document.getElementById('pin-bd').classList.remove('show');
+        editMode = true;
+        document.getElementById('owner-banner').classList.add('show');
+        render();
+      } else {
+        document.getElementById('pin-err').textContent='密碼錯誤，請重試';
+        pinBuf=''; updDots();
+      }
+    }, 200);
+  }
+}
+function updDots(){ for(let i=0;i<4;i++) document.getElementById('d'+i).classList.toggle('filled', i < pinBuf.length); }
+function pinClear(){ pinBuf=pinBuf.slice(0,-1); updDots(); document.getElementById('pin-err').textContent=''; }
+function pinCancel(){ document.getElementById('pin-bd').classList.remove('show'); pinBuf=''; updDots(); }
+function lockOwner(){ editMode=false; document.getElementById('owner-banner').classList.remove('show'); render(); }
+
+// ── 設備邏輯 ──
+function updPrice(id,v){
+  const n=parseInt(v);
+  if(!isNaN(n)&&n>=0){ IDX[id].price=n; savePrices(); updTotal(); }
+}
+function tog(id,v){ IDX[id].on=v; if(v&&IDX[id].qty===0) IDX[id].qty=1; render(); }
+function adj(id,d){ const it=IDX[id]; it.qty=Math.max(0,it.qty+d); if(it.qty===0) it.on=false; render(); }
+function toggleCat(id){ openCats[id]=!openCats[id]; render(); }
+
+function render(){
+  let html='';
+  CATS.forEach(cat=>{
+    const open=openCats[cat.id];
+    html+=`<div class="category">`;
+    html+=`<div class="cat-header ${cat.bg} ${open?'open':''}" onclick="toggleCat('${cat.id}')">`;
+    html+=`<span class="${cat.ic}">${cat.emoji}</span><span class="cat-name">${cat.name}</span>`;
+    const n=cat.items.filter(i=>i.on&&i.qty>0).length;
+    if(n>0) html+=`<span style="font-size:12px;color:#888;">${n}項已選</span>`;
+    html+=`<span class="cat-toggle">▼</span></div>`;
+    html+=`<div class="cat-body ${open?'open':''}">`;
+    cat.items.forEach(it=>{
+      const sub=it.on&&it.qty>0&&!it.free?it.price*it.qty:0;
+      html+=`<div class="item-card ${it.on?'':'off'}">`;
+      html+=`<div class="item-top"><input type="checkbox" class="item-check" ${it.on?'checked':''} onchange="tog('${it.id}',this.checked)">`;
+      html+=`<div><div class="item-name">${it.name}</div><div class="item-spec">${it.spec}</div></div></div>`;
+      html+=`<div class="item-bottom">`;
+      html+=`<div class="qty"><button onclick="adj('${it.id}',-1)" ${!it.on?'disabled':''}>−</button><span>${it.qty}</span><button onclick="adj('${it.id}',1)" ${!it.on?'disabled':''}>+</button></div>`;
+      if(it.free){
+        html+=`<div><span class="free-badge">免費隨附</span></div>`;
+      } else if(editMode){
+        html+=`<div class="price-edit" style="text-align:right"><input type="number" min="0" step="100" value="${it.price}" onchange="updPrice('${it.id}',this.value)"><div style="font-size:11px;color:#aaa;margin-top:2px">元/${it.unit}</div></div>`;
+      } else {
+        html+=`<div class="price-info"><div class="unit-price">${it.price.toLocaleString('zh-TW')} 元/${it.unit}</div>`;
+        html+=`<div class="${sub>0?'subtotal':'subtotal empty'}">${sub>0?fmt(sub):'—'}</div></div>`;
+      }
+      html+=`</div></div>`;
+    });
+    html+=`</div></div>`;
+  });
+  document.getElementById('eq-list').innerHTML=html;
+  updTotal();
+}
+
+function fmt(n){ return 'NT$ '+Math.round(n).toLocaleString('zh-TW'); }
+function updTotal(){
+  let t=0,c=0;
+  Object.values(IDX).forEach(i=>{ if(i.on&&i.qty>0&&!i.free){ t+=i.price*i.qty; c++; }});
+  document.getElementById('grand-total').textContent=fmt(t);
+  document.getElementById('sel-count').textContent=c;
+}
+
+function resetAll(){
+  if(!confirm('確定要重設所有選項嗎？')) return;
+  CATS.forEach(c=>c.items.forEach(i=>{i.on=false;i.qty=0;}));
+  ['f-client','f-date','f-venue','f-notes'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('qnum').textContent=String(Math.floor(Math.random()*900)+100);
+  render();
+}
+
+function showPreview(){
+  const cl=document.getElementById('f-client').value||'（未填）';
+  const dt=document.getElementById('f-date').value||'（未填）';
+  const vn=document.getElementById('f-venue').value||'（未填）';
+  const nt=document.getElementById('f-notes').value;
+  const qn=document.getElementById('qnum').textContent;
+  let rows='',total=0,hasFree=false;
+  CATS.forEach(cat=>cat.items.forEach(it=>{
+    if(!it.on||it.qty===0) return;
+    if(it.free){ hasFree=true; rows+=`<div class="p-item"><div><div class="p-name">${it.name}</div><div class="p-spec">${it.spec}</div></div><div><div class="p-sub" style="color:#2e9b6a">免費</div></div></div>`; return; }
+    const sub=it.price*it.qty; total+=sub;
+    rows+=`<div class="p-item"><div><div class="p-name">${it.name}</div><div class="p-spec">${it.spec}</div></div><div style="text-align:right"><div class="p-qty">${it.qty}${it.unit} × ${it.price.toLocaleString()}</div><div class="p-sub">${fmt(sub)}</div></div></div>`;
+  }));
+  if(!rows){ alert('請先勾選設備項目'); return; }
+  document.getElementById('pv-content').innerHTML=`
+    <div style="font-size:18px;font-weight:700;margin-bottom:4px;">活動音響設備報價單</div>
+    <div style="font-size:12px;color:#888;margin-bottom:16px;">${document.getElementById('qdate').textContent}　Q-${qn}</div>
+    <div class="p-meta"><span>客戶</span><span style="font-weight:600">${cl}</span><span>活動日期</span><span>${dt}</span><span>地點</span><span>${vn}</span></div>
+    ${rows}
+    ${hasFree?'<div style="font-size:12px;color:#2e9b6a;margin:8px 0;">✓ 隨附免費配件：麥克風架、吉他架、譜架</div>':''}
+    <div class="p-total">合計：${fmt(total)}</div>
+    ${nt?`<div class="p-notes">備註：${nt}</div>`:''}
+    <div class="p-footer">本報價單有效期 14 天，實際費用以場勘後正式合約為準。<br>聯絡方式：_______________</div>`;
+  document.getElementById('pv-bd').classList.add('show');
+}
+function closePv(e){ if(!e||e.target===document.getElementById('pv-bd')) document.getElementById('pv-bd').classList.remove('show'); }
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 3000);
+}
+
+// ── 初始化 ──
+loadPrices();
+document.getElementById('qdate').textContent=new Date().toLocaleDateString('zh-TW');
+document.getElementById('qnum').textContent=String(Math.floor(Math.random()*900)+100);
+render();
+</script>
+
+
+</body></html>
